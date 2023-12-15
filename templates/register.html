@@ -6,19 +6,13 @@
     <h2 class="m-3 text-center">Signup</h2>
 
 
-<form method="POST" class="m-4">
+<form method="post" class="m-4">
         {% csrf_token %}
-        {% if msg %}
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
 
-
-            {{msg}}
-
-    
-            <button class="btn btn-close" type="button" data-bs-dismiss="alert" area-label="Close"></button>
-
-
-        </div>
+        {% if err %}
+         <div class="alert alert-danger">
+          <h5>{{err}}</h5>
+         </div>
         {% endif %}
 
 
@@ -28,7 +22,7 @@
         </div>
         <div class="mb-3">
             <label class="form-label">Email address</label>
-            <input type="uemail" class="form-control" name="username" placeholder="Enter email address" required >
+            <input type="email" class="form-control" name="uemail" placeholder="Enter email address" required >
             
           </div>
           <div class="mb-3">
@@ -38,7 +32,7 @@
 
           <div class="mb-3">
             <label class="form-label">Confirm Password</label>
-            <input type="password" class="form-control" name="cpassword" placeholder="Confirm password" required>
+            <input type="password" class="form-control" name="cpass" placeholder="Confirm password" required>
           </div>
 
         <button type="submit" class="btn btn-secondary">Submit</button>
@@ -48,4 +42,5 @@
     </form>
 
 </div>   
+
 {% endblock content %}

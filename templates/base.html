@@ -15,10 +15,12 @@
         
                     <div class="name">1Point1-Blogs</div>
                     <div class="create-blog"><a href="createblog">Create-Blog</a></div>   
+                    {% if user.is_authenticated %}
+                    <div class="logout"><a href="/logout">LOGOUT</a></div>
+                    {% else %}
                     <div class="login"><a href="ulogin">LOGIN</a></div>
-                    <div class="signup"><a href="usignup">SIGNUP</a></div>
-                    <div class="logout"><a href="logout">LOGOUT</a></div>
-                    <div class="register"><a style="text-decoration: none;" href="register">REGISTER</a></div>
+                    <div class="signup"><a style="text-decoration: none;" href="register">REGISTER</a></div>
+                    {% endif %}
            
      </div>
 

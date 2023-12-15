@@ -3,18 +3,70 @@ from django.contrib.auth import login,logout,authenticate
 from django.contrib.auth.models import User
 from . models import *
 from django.views import View
+from .models import Posts,Comments
+
 
 # Create your views here.
 def home(request):
-    return render(request,'home.html',{})
+    context = {}
+    id = request.user.id
+    blog = Posts.objects.all()
+    comments = Comments.objects.all()
+    print(blog)
+    print(request.user.username)
+    #print(comments)
+    context['blogpost'] = blog
+    #context['comments'] = comments
+    return render(request,'home.html',context)
 
 
 def createblog(request):
-    return render(request,'createblog.html')
+    context={}
+    if request.user.is_authenticated:
+        if request.method == 'GET':
+            return render(request,'createblog.html')
+        else:
+            title = request.POST['posttitle']
+            bpost = request.POST['posttext']
+            u_obj = User.objects.get(id = request.user.id)
+            b = Posts.objects.create(title = title, post = bpost,uid = u_obj)
+            b.save()
+            print(u_obj)
+            context['msg'] = 'New Blog Added successfully'
+            return render(request,'createblog.html',context )
+    else:
+        return redirect('/ulogin')
+
+
+def detailblog(request,bid):
+    context = {}
+    b_details = Posts.objects.get(id=bid)
+    context['blog_details'] = b_details
+    print(b_details)
+    print(b_details.title)
+    return render(request,'detailblog.html',context)
 
 
 def ulogin(request):
-    return render(request,'login.html')
+    if request.method=='GET':
+        return render(request,'login.html')
+    else:
+        context={}
+        uname=request.POST['username']
+        upass=request.POST['password']
+ 
+        if uname=='' or upass=='':
+            context['err']='username and password required'
+            return render(request,'login.html',context)
+        else:
+            u=authenticate(username=uname,password=upass)
+            if u is not None:
+                login(request,u)
+                return redirect('/')
+            
+            else:
+                context['err']='invalid username and password'
+                return render(request,'login.html',context)
 
 def signup(request):
     # if request.method == "GET":
@@ -67,25 +119,37 @@ def signup(request):
     return render(request,'signup.html')
 
 class register(View):
+    
     def get(self,request):
         return render(request,'register.html')
     
     def post(self,request):
         name = request.POST['name']
-        email = request.POST['email']
+        uemail = request.POST['uemail']
         password = request.POST['password']
-        cpass = request.POST["cpass"]
-         
-        u = User.objects.create(username = name)
-        u.set_password(password)
-        u.save()
-        return render(request,"register.html",{'msg':'Successfully registered Please Login'})
+        cpass = request.POST['cpass']
+        print(name)
+        print(uemail)
+        print(password)
+        print(cpass)
+        context ={}
+        if password != cpass:
+            context['err']= 'Password and confirm password did not match'
+            return render(request,"register.html",context)
+        else:
+             u = User.objects.create(username = name,email=uemail)
+             u.set_password(password)
+             u.save()
+             context['err']= 'Successfully registered Please Login'
+
+             return render(request,'register.html',context)
 
     
 
 
-def logout(request):
-    return render(request,'home.html')
+def logoutt(request):
+    logout(request)
+    return redirect('/')
 
 
 def editpost(request):
