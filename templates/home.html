@@ -15,11 +15,11 @@
 
 
     {% block content %}
-    
+
     <div class="container col-md-12 mx-auto">
 
-        <div class="tagline col-md-8 mx-auto mb-4">
-            <h1 class="text-white">Welcome to the One Point Blog</h1>
+        <div class="tagline col-md-8 mb-4 mx-auto">
+            <h1 class="text-white text-center">Welcome to the One Point Blog</h1>
 
         </div>
 
@@ -27,14 +27,14 @@
         <div class="row mt-3 mb-5 mx-auto col-md-12">
             {% for x in blogpost %}
             <div class="col-md-4">
-                <div class="blogcard text-white py-2 bg-dark rounded-4 mb-4">
+                <div class="card text-white  bg-dark rounded-4 mb-4">
 
-                        <div class="image">
-                            <img  class="card-image-top" src="{{x.b_image.url}}" width="100%" alt="Card image cap">
-                        </div>
+                    <div class="image">
+                        <img class="card-image-top" src="{{x.img.url}}" width="100%" alt="Card image cap">
+                    </div>
 
 
-                    <div class="card-1 card-header  mt-4 pl-3">
+                    <div class="card-1 card-header  mt-2 pl-3">
                         {{x.title}}
                     </div>
 
@@ -49,9 +49,9 @@
                         </div>
 
                         <div style="width: 150px;" class="written_by mx-auto my-2">
-                                <div class="wrby_name">
-                                    By:{{user.username}}
-                                </div>
+                            <div class="wrby_name">
+                                By:{{user.username}}
+                            </div>
                         </div>
 
 

@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,HttpResponse
 from django.contrib.auth import login,logout,authenticate
 from django.contrib.auth.models import User
 from . models import *
@@ -11,10 +11,7 @@ def home(request):
     context = {}
     id = request.user.id
     blog = Posts.objects.all()
-    comments = Comments.objects.all()
-    print(blog)
-    print(request.user.username)
-    #print(comments)
+    
     context['blogpost'] = blog
     #context['comments'] = comments
     return render(request,'home.html',context)
@@ -27,11 +24,12 @@ def createblog(request):
             return render(request,'createblog.html')
         else:
             title = request.POST['posttitle']
-            bpost = request.POST['posttext']
+            description = request.POST['description']
+            shortdesc = request.POST['shortdesc']
             u_obj = User.objects.get(id = request.user.id)
-            b = Posts.objects.create(title = title, post = bpost,uid = u_obj)
+            img = request.FILES['img']
+            b = Posts.objects.create(uid = u_obj,title = title,img = img, shortdesc = shortdesc, description = description,)
             b.save()
-            print(u_obj)
             context['msg'] = 'New Blog Added successfully'
             return render(request,'createblog.html',context )
     else:
@@ -45,6 +43,25 @@ def detailblog(request,bid):
     print(b_details)
     print(b_details.title)
     return render(request,'detailblog.html',context)
+    
+def addcomment(request):
+    context = {}
+    if request.user.is_authenticated:
+        if request.method == 'GET':
+            return render(request,'detailblog.html')
+        else:
+            text = request.POST['comment']
+            name = request.user.username
+            c = Comments.objects.create(text = text,name = name)
+            c.save()
+
+            return render(request,'detailblog.html',)
+    else:
+        context['errmsg'] = 'You must login first to comment'
+        return render(request,'detailblog.html',context)
+
+
+
 
 
 def ulogin(request):
@@ -128,10 +145,6 @@ class register(View):
         uemail = request.POST['uemail']
         password = request.POST['password']
         cpass = request.POST['cpass']
-        print(name)
-        print(uemail)
-        print(password)
-        print(cpass)
         context ={}
         if password != cpass:
             context['err']= 'Password and confirm password did not match'
@@ -152,12 +165,41 @@ def logoutt(request):
     return redirect('/')
 
 
-def editpost(request):
-    return render(request,'home.html',{})
+def editpost(request,id):
+    context = {}
+    if request.user.is_authenticated:
+        if request.method =='GET':
+            p = Posts.objects.filter(id=id)
+            context['posts'] = p
+            return render(request,'editpost.html',context)
+        else:
+            title = request.POST['posttitle']
+            description = request.POST['description']
+            shortdesc = request.POST['shortdesc']
+            u_obj = User.objects.get(id = request.user.id)
+           # bimg = request.FILES['img']
+            b = Posts.objects.create(uid = u_obj,title = title,shortdesc = shortdesc, description = description,)
+            b.save()
+            context['msg'] = 'New Blog Added successfully'
+            return render(request,'createblog.html',context )
 
 
-def deletepost(request):
-    return render(request,'home.html',{})
+    else:
+        return redirect('/')
+
+
+
+def deletepost(request,id):
+    context = {}
+    if request.user.is_authenticated:
+        did = Posts.objects.get(id = id)
+        did.delete()
+        return redirect('/')
+        
+
+    else:
+        context['errmsg']="You must login first"
+        return render(request,'detailblog.html',context)
 
 def editcomment(request):
     return render(request,'editcomment.html',{})

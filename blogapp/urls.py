@@ -1,5 +1,7 @@
 from django.urls import path
-from blogapp.views import *
+from blogapp.views import * 
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     path('',home),
@@ -9,9 +11,16 @@ urlpatterns = [
     path('logout',logoutt),
     path('usignup',signup),
     path('register',register.as_view()),
-    path('editpost',editpost),
-    path('deletepost',deletepost),
+    path('editpost/<id>',editpost),
+    path('deletepost/<id>',deletepost),
     path('editcomment',editcomment),
-    path('deletecomment',deletecomment)
+    path('deletecomment',deletecomment),
+    path('addcomment',addcomment),
+    
+]+  static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
 
-]
+''' or we can write this media settings in following ways also after urlpatterns
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA,document_root=settings.MEDIA_ROOT)
+    
+'''

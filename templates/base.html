@@ -14,12 +14,14 @@
      <div class="container head text-white col-md-8">
         
                     <div class="name">1Point1-Blogs</div>
-                    <div class="create-blog"><a href="createblog">Create-Blog</a></div>   
+                    <div class="signup"><a style="text-decoration: none;" href="/">Home</a></div>   
+
+                    <div class="create-blog"><a style="text-decoration: none;" href="/createblog">Create-Blog</a></div>   
                     {% if user.is_authenticated %}
-                    <div class="logout"><a href="/logout">LOGOUT</a></div>
+                    <div class="logout"><a style="text-decoration: none;" href="/logout">Logout</a></div>
                     {% else %}
-                    <div class="login"><a href="ulogin">LOGIN</a></div>
-                    <div class="signup"><a style="text-decoration: none;" href="register">REGISTER</a></div>
+                    <div class="login"><a style="text-decoration: none;" href="/ulogin">Login</a></div>
+                    <div class="signup"><a style="text-decoration: none;" href="/register">Register</a></div>
                     {% endif %}
            
      </div>

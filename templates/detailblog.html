@@ -5,49 +5,70 @@
 {% block content %}
 
 <div class="container col-md-12">
-  
-
+    {% if errmsg %}
+    <div class="alert alert-danger col-md-8">
+        {{errmsg}}
+    </div>
+    {% endif %}
 
     <!-- Blog Post -->
- <div class="card text-white bg-dark rounded-4 mb-4">
-    <div class="card-1 card-header mt-4 mx-5">
-        Title :{{blog_details.title}}
-    </div>
-    <div class="card-body">
-        <p class="card-text">
-
-           {{blog_details.description}}
-        </p>
-        <div class="edit-delete">
-            <a href="editpost/{{x.id}}" class="btn btn-outline-secondary btn-sm mr-2  rounded-3 edit-btn">Edit</a>
-            <a href="deletepost{{x.id}}" class="btn btn-outline-secondary btn-sm rounded-3   delete-btn">Delete</a>
+    <div class="card text-white bg-dark rounded-4 mb-4">
+        <div class="card-1 card-header mt-4 mx-5">
+            Title :{{blog_details.title}}
         </div>
-
-
-    </div>
-
-    <!-- Comment Section -->
-    <div class="comment_section card text-white bg-dark mb-4 col-sm-8 border rounded-4 mx-auto">
-
-        <div class="card-header mt-3">
-            Comments
-        </div>
-
         <div class="card-body">
-            <div class="comment">
-                <p class="card-text">Comment 1: Lorem ipsum dolor sit amet.</p>
+            <p class="card-text">
 
-                <!-- <a href="editcomment" class="btn-outline-secondary btn-sm mr-2 edit-btn">Edit</a>
-                   -->
+                {{blog_details.description}}
+            </p>
+            <div class="edit-delete">
+                <a href="/editpost/{{blog_details.id}}" class="btn btn-outline-secondary btn-sm mr-2  rounded-3 edit-btn">Edit</a>
+                <a href="/deletepost/{{blog_details.id}}" class="btn btn-outline-secondary btn-sm rounded-3   delete-btn">Delete</a>
             </div>
 
+
         </div>
+
+        <!-- Comment Section -->
+        <div class="comment_section card text-white bg-dark mb-4 col-sm-8 border rounded-4 mx-auto">
+
+
+            <div class="card-header mt-3">
+                Comments
+            </div>
+            <div class="Add-comment mt-2"><a href="/addcomment" class="btn btn-outline-secondary btn-sm">Add Comment</a>
+            </div>
+            <div class="addcommentform mt-2">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-8"> <input class="form-control" type="text" name="comment" id=""></div>
+                        <div class="col-md-1"> <input class="btn btn-outline-secondary" type="submit"></div>
+                        <div class="col-md-1 ml-2 Add-comment"><a type="submit" href="/addcomment" class="btn btn-outline-secondary ">Add-Comment</a>
+                        </div>
+                       
+                    </div>
+                </form>
+            </div>
+
+            <div class="card-body">
+                <div class="commentedby">
+                    comment by-
+                </div>
+                <div class="ct">
+                    <p class="comment-text">comment text</p>
+
+                </div>
+            </div>
+
+
+
+        </div>
+
+
     </div>
 
 
-</div>
 
 
-
-  
-{% endblock content %}
+    {% endblock content %}

@@ -1,3 +1,4 @@
+{% extends "base.html" %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -10,14 +11,10 @@
 </head>
 
 <body>
-   <div class="container head col-md-8 text-white">
+{% block content %}
+ 
 
-      <div class="name">1Point1-Blogs</div>
 
-      <div class="logout"><a style="text-decoration: none;" href="/">HOME</a></div>
-      <div class="logout"><a style="text-decoration: none;" href="logout">LOGOUT</a></div>
-
-   </div>
    {% if msg %}
    <div class="alert alert-danger col-md-6 mx-auto">
       {{msg}}
@@ -25,45 +22,55 @@
    {% endif %}
 
    <div class="col-md-8 card bg-dark rounded-4 mb-4 mx-auto mt-5">
+    <div class="tophead text-white mt-3 mx-auto">
+        <h2>Edit Your Blog</h2>
+      </div>
 
-     <div class="form_container mx-5 mt-4">
-      <form method="post" enctype="multipart/form-data">
+
+      {% for p in posts %}
+     <div class="form_container mx-5">
+      <form method="post">
          {% csrf_token %}
 
          
          <div class="mb-3">
             <label class="form-label text-white">Title:</label>
-            <input type="text" class="form-control" name="posttitle" placeholder="Enter Blog Title" required>
+            <input type="text" value = "{{p.title}}" class="form-control" name="posttitle" placeholder="Enter Blog Title" required>
          </div>
 
          <div class="mb-3">
             <label class="form-label text-white">Upload Image:</label>
-            <input type="file" class="form-control" name="img" accept="image/*">
+            <input type="file" class="form-control" name="img" accept="image/*" value="" >
          </div>
 
 
 
          <div class="mb-3">
             <label class="form-label text-white">Short Description:</label>
-            <textarea  class="form-control" name="shortdesc" id="" rows="3" placeholder="type short descriptions about blog"></textarea>
+            <textarea  class="form-control" name="shortdesc" id="" rows="3" placeholder="type short descriptions about blog">
+               {{p.shortdesc}}
+            </textarea>
           
          </div>
         
          <div class="mb-3">
             <label class="form-label text-white">Detailed Blog Descriptions:</label>
-            <textarea  class="form-control" name="description" id="" rows="8" placeholder="type detailed blog here.."></textarea>
+            <textarea class="form-control" name="description" id="" rows="8" placeholder="type detailed blog here..">
+               {{p.description}}
+            </textarea>
           
          </div>
         
 
-         <button class="btn btn-outline-secondary col-md-2 mx-auto mb-4 text-white" type="submit">Add-Blog</button>
+         <button class="btn btn-outline-secondary col-md-2 mx-auto mb-4 text-white" type="submit">Submit</button>
 
 
        </form>
      </div>
+     {% endfor %}
    </div>
 
-
+   {% endblock content %}
 
 
    <!-- 
