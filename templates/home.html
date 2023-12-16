@@ -27,41 +27,37 @@
         <div class="row mt-3 mb-5 mx-auto col-md-12">
             {% for x in blogpost %}
             <div class="col-md-4">
-                <div class="card text-white  bg-dark rounded-4 mb-4">
+                <div class="card text-white bg-dark rounded-4 mb-4" style="height: 450px;">
 
                     <div class="image">
-                        <img class="card-image-top" src="{{x.img.url}}" width="100%" alt="Card image cap">
+                        <img class="card-img-top" src="{{x.img.url}}" width="100%" height="200px" alt="Card image cap">
                     </div>
 
 
-                    <div class="card-1 card-header  mt-2 pl-3">
+                    <div class="card-1 card-header text-info radius-2   mt-2 pl-3">
                         {{x.title}}
                     </div>
 
-
-
-
-                    <div class="card-body">
-                        <div class="card-text">
-                            <p>
-                                {{x.shortdesc}}
-                            </p>
-                        </div>
-
-                        <div style="width: 150px;" class="written_by mx-auto my-2">
-                            <div class="wrby_name">
-                                By:{{user.username}}
-                            </div>
-                        </div>
-
-
-
-
-                        <div class="see_details col-md-6 mx-auto">
-                            <a href="/detailblog/{{x.id}}"
-                                class="btn btn-outline-secondary btn-sm rounded-3 edit-btn">See Details..</a>
-                        </div>
+                    <div class="shortdesc mt-2 ml-3 mb-4">
+                        <p>
+                            {{x.shortdesc}}
+                        </p>
                     </div>
+
+
+                    <div class="writtenby text-info text-center mt-5">
+                        Written By : {{x.uid.username}}
+                    </div>
+
+
+
+
+
+                    <div class="see_details col-md-6 mx-auto mt-2    text-center">
+                        <a href="/detailblog/{{x.id}}" class="btn btn-outline-secondary btn-sm rounded-3 edit-btn">See
+                            Details..</a>
+                    </div>
+
 
 
 

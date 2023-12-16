@@ -3,7 +3,7 @@ from django.contrib.auth import login,logout,authenticate
 from django.contrib.auth.models import User
 from . models import *
 from django.views import View
-from .models import Posts,Comments
+from . models import *
 
 
 # Create your views here.
@@ -11,6 +11,8 @@ def home(request):
     context = {}
     id = request.user.id
     blog = Posts.objects.all()
+    c_details = Comments.objects.all()
+    context['comments'] = c_details
     
     context['blogpost'] = blog
     #context['comments'] = comments
@@ -40,25 +42,49 @@ def detailblog(request,bid):
     context = {}
     b_details = Posts.objects.get(id=bid)
     context['blog_details'] = b_details
+    c_details = Comments.objects.filter(post=bid)
+    context['comments'] = c_details
     print(b_details)
     print(b_details.title)
-    return render(request,'detailblog.html',context)
-    
-def addcomment(request):
-    context = {}
     if request.user.is_authenticated:
-        if request.method == 'GET':
-            return render(request,'detailblog.html')
-        else:
+        if request.method == 'POST':
             text = request.POST['comment']
             name = request.user.username
-            c = Comments.objects.create(text = text,name = name)
+            commented_by = User.objects.get(id=request.user.id)
+            c = Comments.objects.create(text = text,name = name, post = b_details ,commented_by = commented_by)
             c.save()
 
-            return render(request,'detailblog.html',)
+            return render(request,'detailblog.html',context)
+        else:
+            return render(request,'detailblog.html',context)
+
+            
     else:
         context['errmsg'] = 'You must login first to comment'
         return render(request,'detailblog.html',context)
+
+    return render(request,'detailblog.html',context)
+    
+def addcomment(request,bid):
+    context = {}
+    b_details = Posts.objects.get(id=bid)
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            text = request.POST['comment']
+            name = request.user.username
+            commented_by = User.objects.get(id=request.user.id)
+            c = Comments.objects.create(text = text,name = name, post = b_details ,commented_by = commented_by)
+            c.save()
+
+            return render(request,'detailblog.html',context)
+        else:
+            return render(request,'detailblog.html',context)
+
+            
+    else:
+        return redirect('/detailblog')
+        # context['errmsg'] = 'You must login first to comment'
+        # return render(request,'detailblog.html',context)
 
 
 
@@ -176,16 +202,17 @@ def editpost(request,id):
             title = request.POST['posttitle']
             description = request.POST['description']
             shortdesc = request.POST['shortdesc']
+            img = request.FILES['img']
             u_obj = User.objects.get(id = request.user.id)
            # bimg = request.FILES['img']
-            b = Posts.objects.create(uid = u_obj,title = title,shortdesc = shortdesc, description = description,)
+            b = Posts.objects.create(uid = u_obj,title = title,img = img,shortdesc = shortdesc, description = description,)
             b.save()
-            context['msg'] = 'New Blog Added successfully'
-            return render(request,'createblog.html',context )
+            context['msg'] = 'New Blog Edited successfully'
+            return render(request,'editblog.html',context )
 
 
     else:
-        return redirect('/')
+        return redirect('/login')
 
 
 

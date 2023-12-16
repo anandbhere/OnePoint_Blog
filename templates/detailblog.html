@@ -4,9 +4,9 @@
 
 {% block content %}
 
-<div class="container col-md-12">
+<div class="container col-md-10">
     {% if errmsg %}
-    <div class="alert alert-danger col-md-8">
+    <div class="alert alert-danger col-md-8 mx-auto alert-dismissible fade show">
         {{errmsg}}
     </div>
     {% endif %}
@@ -14,9 +14,15 @@
     <!-- Blog Post -->
     <div class="card text-white bg-dark rounded-4 mb-4">
         <div class="card-1 card-header mt-4 mx-5">
-            Title :{{blog_details.title}}
+            Title : <span class="text-info"> {{blog_details.title}}</span>
+        </div>
+        <div class="card-image mx-auto mt-3">
+            <img src="{{blog_details.img.url}}" width="100%" height="600px">
         </div>
         <div class="card-body">
+            <div class="timedate fw-bold ml-3">
+              <span class="text-info">  {{blog_details.uid.username}},</span> <span class="text-info-emphasis">{{blog_details.created_on}} </span>
+            </div>
             <p class="card-text">
 
                 {{blog_details.description}}
@@ -36,31 +42,33 @@
             <div class="card-header mt-3">
                 Comments
             </div>
-            <div class="Add-comment mt-2"><a href="/addcomment" class="btn btn-outline-secondary btn-sm">Add Comment</a>
+              {% for com in comments %}
+            <div class="ml-4">
+                <div class="commentedby">
+                    {{com.name}}:
+                </div>
+                <div class="ct">
+                    <p class="comment-text">{{com.text}}</p>
+
+                </div>
             </div>
-            <div class="addcommentform mt-2">
+            {% endfor %}
+            
+            <div class="addcommentform mb-3 mt-2">
                 <form method="post">
                     {% csrf_token %}
-                    <div class="row">
+                    <div class="row ml-5">
                         <div class="col-md-8"> <input class="form-control" type="text" name="comment" id=""></div>
-                        <div class="col-md-1"> <input class="btn btn-outline-secondary" type="submit"></div>
-                        <div class="col-md-1 ml-2 Add-comment"><a type="submit" href="/addcomment" class="btn btn-outline-secondary ">Add-Comment</a>
+                        <div class="col-md-3"> <button class="btn btn-outline-secondary" type="submit">Add-Comment</button></div>
+                        <!-- <div class="col-md-1 ml-2 Add-comment"><a type="submit" href="/addcomment" class="btn btn-outline-secondary ">Add-Comment</a>
+                        -->
                         </div>
                        
                     </div>
                 </form>
             </div>
 
-            <div class="card-body">
-                <div class="commentedby">
-                    comment by-
-                </div>
-                <div class="ct">
-                    <p class="comment-text">comment text</p>
-
-                </div>
-            </div>
-
+            
 
 
         </div>

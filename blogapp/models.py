@@ -17,7 +17,7 @@ class Posts(models.Model):
 
 
 class Comments(models.Model):
-    post = models.ForeignKey(Posts,on_delete = models.CASCADE,db_column = 'cid')
+    post = models.ForeignKey(Posts,on_delete = models.CASCADE,db_column = 'post')
     commented_by = models.ForeignKey(User,on_delete = models.CASCADE, db_column = 'commented_by' )
     text = models.CharField(max_length = 254)
     name = models.CharField(max_length = 200)
