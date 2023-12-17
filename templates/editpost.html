@@ -27,7 +27,7 @@
       </div>
 
 
-      {% for p in posts %}
+      {% for pdata in posts %}
      <div class="form_container mx-5">
       <form method="post" enctype="multipart/form-data">
          {% csrf_token %}
@@ -35,12 +35,12 @@
          
          <div class="mb-3">
             <label class="form-label text-white">Title:</label>
-            <input type="text" value = "{{p.title}}" class="form-control" name="posttitle" placeholder="Enter Blog Title" required>
+            <input type="text" value = "{{pdata.title}}" class="form-control" name="posttitle" placeholder="Enter Blog Title" required>
          </div>
 
          <div class="mb-3">
             <label class="form-label text-white">Upload Image:</label>
-            <input type="file" class="form-control" name="img" accept="image/*" value="{{p.img}}" >
+            <input type="file" class="form-control" name="img" accept="image/*" value="{{pdata.img.url}}" >
          </div>
 
 
@@ -48,7 +48,7 @@
          <div class="mb-3">
             <label class="form-label text-white">Short Description:</label>
             <textarea  class="form-control" name="shortdesc" id="" rows="3" placeholder="type short descriptions about blog">
-               {{p.shortdesc}}
+               {{pdata.shortdesc}}
             </textarea>
           
          </div>
@@ -56,7 +56,7 @@
          <div class="mb-3">
             <label class="form-label text-white">Detailed Blog Descriptions:</label>
             <textarea class="form-control" name="description" id="" rows="8" placeholder="type detailed blog here..">
-               {{p.description}}
+               {{pdata.description}}
             </textarea>
           
          </div>

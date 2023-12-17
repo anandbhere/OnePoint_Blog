@@ -3,7 +3,7 @@ from django.contrib.auth import login,logout,authenticate
 from django.contrib.auth.models import User
 from . models import *
 from django.views import View
-from . models import *
+import os
 
 
 # Create your views here.
@@ -44,8 +44,8 @@ def detailblog(request,bid):
     context['blog_details'] = b_details
     c_details = Comments.objects.filter(post=bid)
     context['comments'] = c_details
-    print(b_details)
-    print(b_details.title)
+    print(c_details)
+    #print(b_details.title)
     if request.user.is_authenticated:
         if request.method == 'POST':
             text = request.POST['comment']
@@ -112,20 +112,6 @@ def ulogin(request):
                 return render(request,'login.html',context)
 
 def signup(request):
-    # if request.method == "GET":
-    #     return render(request,'signup.html')
-    # else:
-
-    #     name = request.POST['name']
-    #     email = request.POST['uemail']
-    #     password = request.POST['password']
-    #     cpassword = request.POST['cpassword']
-    #     u = User.objects.create(username = name)
-    #     u.set_password(password)
-    #     u.save()
-    #     print(name,email,password)
-    #     return render(request,'signup.html',{'context':'Signed up successfully, please login..!!'})
-    
     
     # context = {}
     # if request.method=="GET":
@@ -202,17 +188,39 @@ def editpost(request,id):
             title = request.POST['posttitle']
             description = request.POST['description']
             shortdesc = request.POST['shortdesc']
-            img = request.FILES['img']
             u_obj = User.objects.get(id = request.user.id)
-           # bimg = request.FILES['img']
-            b = Posts.objects.create(uid = u_obj,title = title,img = img,shortdesc = shortdesc, description = description,)
-            b.save()
+            if title == '' or description =='' or shortdesc =='' :
+                context['errmsg'] = 'Fields cannot be empty'
+                return render(request,'editpost.html')
+            else:
+                post = Posts.objects.filter(id=id)
+                post.update(uid = u_obj,title = title,shortdesc = shortdesc, description = description,)
+                
+                p_img = Posts.objects.get(id =id)
+                 
+                
+                try:
+                    if len(request.FILES) != 0:
+                        if len(p_img.img) > 0 :
+                            os.remove(p_img.img.path)
+                    p_img = request.FILES['img']
+                    print(p_img)
+                    
+                except:
+                    context['posts'] = post
+                    context['errmsg']= 'Fields Cannot be empty'
+                    #return render(request,'editpost.html',context)
+                p_img.save(p_img.img.path)
+            
+           
+
             context['msg'] = 'New Blog Edited successfully'
-            return render(request,'editblog.html',context )
+            #return render(request,'editblog.html',context)
+            return redirect('/')
 
 
     else:
-        return redirect('/login')
+        return redirect('/ulogin')
 
 
 
