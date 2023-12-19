@@ -81,12 +81,12 @@ DATABASES = {
         'NAME': 'Onepointblog',
         'USER': 'root',
         'PASSWORD':'',
-        'PORT': 3307,
+        'PORT': 3306,
     },
 
     'secondary':{
         'ENGINE':'django.db.backends.sqlite3',
-        'NAME': BASE_DIR/'/db1.sqlite3',
+        'NAME': BASE_DIR/'mydatabase',
     }
 }
 

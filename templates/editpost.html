@@ -15,9 +15,9 @@
  
 
 
-   {% if msg %}
+   {% if errmsg %}
    <div class="alert alert-danger col-md-6 mx-auto">
-      {{msg}}
+      {{errmsg}}
    </div>
    {% endif %}
 
@@ -47,7 +47,7 @@
 
          <div class="mb-3">
             <label class="form-label text-white">Short Description:</label>
-            <textarea  class="form-control" name="shortdesc" id="" rows="3" placeholder="type short descriptions about blog">
+            <textarea  class="form-control" maxlength="200" name="shortdesc" id="" rows="3" placeholder="type short descriptions about blog">
                {{pdata.shortdesc}}
             </textarea>
           

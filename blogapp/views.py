@@ -28,12 +28,24 @@ def createblog(request):
             title = request.POST['posttitle']
             description = request.POST['description']
             shortdesc = request.POST['shortdesc']
+            print("LENSHORT",len(shortdesc))
             u_obj = User.objects.get(id = request.user.id)
-            img = request.FILES['img']
-            b = Posts.objects.create(uid = u_obj,title = title,img = img, shortdesc = shortdesc, description = description,)
-            b.save()
-            context['msg'] = 'New Blog Added successfully'
-            return render(request,'createblog.html',context )
+            try:
+                img = request.FILES['img']
+            except:
+                context['msg'] = 'Fields cannot be empty'
+                return render(request,'createblog.html',context )
+                
+            if title == '' or description =='' or shortdesc =='' or len(img) == 0 :
+                context['msg'] = 'Fields cannot be empty'
+                return render(request,'createblog.html',context )
+                
+            else:
+                
+                b = Posts.objects.create(uid = u_obj,title = title,img = img, shortdesc = shortdesc, description = description,)
+                b.save()
+                context['msg'] = 'New Blog Added successfully go to Home to view'
+                return render(request,'createblog.html',context )
     else:
         return redirect('/ulogin')
 
@@ -191,31 +203,38 @@ def editpost(request,id):
             u_obj = User.objects.get(id = request.user.id)
             if title == '' or description =='' or shortdesc =='' :
                 context['errmsg'] = 'Fields cannot be empty'
-                return render(request,'editpost.html')
+                context['posts'] = p
+
+                #return redirect('/editpost.html')
+                return render(request,'editpost.html',context)
             else:
                 post = Posts.objects.filter(id=id)
                 post.update(uid = u_obj,title = title,shortdesc = shortdesc, description = description,)
                 
                 p_img = Posts.objects.get(id =id)
+                print(p_img)
                  
                 
                 try:
                     if len(request.FILES) != 0:
                         if len(p_img.img) > 0 :
                             os.remove(p_img.img.path)
-                    p_img = request.FILES['img']
-                    print(p_img)
+                    p_img.img = request.FILES['img']
+                    print(p_img.img)
+                
+
                     
                 except:
                     context['posts'] = post
                     context['errmsg']= 'Fields Cannot be empty'
-                    #return render(request,'editpost.html',context)
-                p_img.save(p_img.img.path)
+                    return render(request,'editpost.html',context)
+                p_img.save()
+                    
             
            
 
-            context['msg'] = 'New Blog Edited successfully'
-            #return render(request,'editblog.html',context)
+                context['msg'] = 'New Blog Edited successfully'
+                #return render(request,'editblog.html',context)
             return redirect('/')
 
 
