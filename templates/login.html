@@ -9,11 +9,23 @@
     <form method="post" class="m-4" >
         {% csrf_token %}
 
-        {% if err %}
+        {% if errmsg %}
         <div class="alert alert-danger" >
-          <h5>{{err}}</h5>
+          <h5>{{errmsg}}</h5>
         </div>
         {% endif %}
+
+          <!-- {% for message in messages %}
+          <div class="alert alert-danger">
+            {% if message %}
+{{message}}
+{% endif %}
+          </div>
+          {% endfor %} -->
+
+
+
+
             <div class="mb-3">
               <label class="form-label">User name</label>
               <input type="text" class="form-control" name="username" placeholder="Enter User Name" required >

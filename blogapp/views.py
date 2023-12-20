@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from . models import *
 from django.views import View
 import os
-
+from django.contrib import messages
 
 # Create your views here.
 def home(request):
@@ -47,33 +47,50 @@ def createblog(request):
                 context['msg'] = 'New Blog Added successfully go to Home to view'
                 return render(request,'createblog.html',context )
     else:
+        messages.success(request,"You must log in first to create blog")
         return redirect('/ulogin')
 
 
 def detailblog(request,bid):
     context = {}
-    b_details = Posts.objects.get(id=bid)
-    context['blog_details'] = b_details
-    c_details = Comments.objects.filter(post=bid)
-    context['comments'] = c_details
-    print(c_details)
-    #print(b_details.title)
-    if request.user.is_authenticated:
-        if request.method == 'POST':
-            text = request.POST['comment']
-            name = request.user.username
-            commented_by = User.objects.get(id=request.user.id)
-            c = Comments.objects.create(text = text,name = name, post = b_details ,commented_by = commented_by)
-            c.save()
-
-            return render(request,'detailblog.html',context)
-        else:
-            return render(request,'detailblog.html',context)
-
-            
-    else:
-        context['errmsg'] = 'You must login first to comment'
+    if request.method == 'GET':
+        b_details = Posts.objects.get(id=bid)
+        context['blog_details'] = b_details
+        c_details = Comments.objects.filter(post=bid)
+        context['comments'] = c_details
+        print(c_details)
+        print(b_details.title)
         return render(request,'detailblog.html',context)
+
+    else:
+        if request.user.is_authenticated:
+            if request.method == 'POST':
+                text = request.POST['comment']
+                name = request.user.username
+                b_details = Posts.objects.get(id=bid)
+
+                commented_by = User.objects.get(id=request.user.id)
+                c = Comments.objects.create(text = text,name = name, post = b_details ,commented_by = commented_by)
+                c.save()
+                
+                #fetching and showing post details and comments 
+                b_details = Posts.objects.get(id=bid)
+                context['blog_details'] = b_details
+
+                c_details = Comments.objects.filter(post=bid)
+                context['comments'] = c_details
+
+
+                return render(request,'detailblog.html',context)
+            # else:
+            #     return render(request,'detailblog.html',context)
+
+                
+        else:
+            context['errmsg'] = 'You must login first to comment'
+            print(context['errmsg'])
+            return render(request,'login.html',context)
+            #return render(request,'detailblog.html',context)
 
     return render(request,'detailblog.html',context)
     
@@ -111,7 +128,7 @@ def ulogin(request):
         upass=request.POST['password']
  
         if uname=='' or upass=='':
-            context['err']='username and password required'
+            context['errmsg']='username and password required'
             return render(request,'login.html',context)
         else:
             u=authenticate(username=uname,password=upass)
@@ -120,7 +137,7 @@ def ulogin(request):
                 return redirect('/')
             
             else:
-                context['err']='invalid username and password'
+                context['errmsg']='invalid username and password'
                 return render(request,'login.html',context)
 
 def signup(request):
@@ -239,6 +256,8 @@ def editpost(request,id):
 
 
     else:
+        #context['errmsg']= 'You must login first to edit the post'
+        messages.success(request,'You must login first to edit the post')
         return redirect('/ulogin')
 
 
@@ -248,12 +267,14 @@ def deletepost(request,id):
     if request.user.is_authenticated:
         did = Posts.objects.get(id = id)
         did.delete()
+        #messages.success(request,"You must login to delete post")
         return redirect('/')
         
 
     else:
-        context['errmsg']="You must login first"
-        return render(request,'detailblog.html',context)
+        context['errmsg']="You must login first delete post"
+        #return render(request,'login.html',context)
+        return redirect('/ulogin',context)
 
 def editcomment(request):
     return render(request,'editcomment.html',{})
